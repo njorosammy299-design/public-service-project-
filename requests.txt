@@ -1,0 +1,3 @@
+101|Garbage Collection|Estate Phase 2|Uncollected garbage piling up near the gate.|Pending
+23|Water|Rongai|water leakage|Resolved
+20|Garbage|Gakurwe|Garbage is located allover the Market place|Pending
