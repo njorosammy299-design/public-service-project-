@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Public Service Request System - Murang'a PSB</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-900 text-slate-100 min-h-screen font-sans">
+    <!-- Header -->
+    <header class="bg-slate-800 border-b border-slate-700 px-6 py-4">
+        <div class="max-w-6xl mx-auto flex flex-wrap justify-between items-center gap-4">
+            <div>
+                <h1 class="text-xl font-bold text-emerald-400 font-mono">=== PUBLIC SERVICE REQUEST SYSTEM ===</h1>
+                <p class="text-xs text-slate-400">Murang'a County PSB Practical Assessment • C++ File I/O & Web Simulation</p>
+            </div>
+            <div class="flex gap-2">
+                <button onclick="switchTab('app')" id="tabApp" class="px-4 py-2 rounded-lg text-xs font-bold bg-emerald-600 text-white">
+                    Interactive System & Console
+                </button>
+                <button onclick="switchTab('cpp')" id="tabCpp" class="px-4 py-2 rounded-lg text-xs font-bold bg-slate-700 text-slate-300 hover:bg-slate-600">
+                    View C++ Source Code (main.cpp)
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Interactive View -->
+    <main id="viewApp" class="max-w-6xl mx-auto px-6 py-8 grid grid-cols-1 lg:grid-cols-12 gap-6">
+        
+        <!-- Left Column: Menu Options 1 & 3 -->
+        <div class="lg:col-span-5 space-y-6">
+            <!-- Option 1: Submit a New Request -->
+            <div class="bg-slate-800 border border-slate-700 rounded-xl p-5">
+                <h2 class="text-sm font-bold text-emerald-400 font-mono mb-3">1. Submit a New Request</h2>
+                <form id="submitForm" class="space-y-3">
+                    <div>
+                        <label class="block text-xs text-slate-400 mb-1">Enter numeric ID (e.g., 102):</label>
+                        <input type="number" id="reqId" required placeholder="102" class="w-full bg-slate-900 border border-slate-700 rounded px-3 py-2 text-sm text-white focus:outline-none focus:border-emerald-500">
+                    </div>
+                    <div>
+                        <label class="block text-xs text-slate-400 mb-1">Enter Category (e.g., Streetlight, Water, Garbage):</label>
+                        <input type="text" id="reqCategory" required placeholder="Streetlight" class="w-full bg-slate-900 border border-slate-700 rounded px-3 py-2 text-sm text-white focus:outline-none focus:border-emerald-500">
+                    </div>
+                    <div>
+                        <label class="block text-xs text-slate-400 mb-1">Enter Location (e.g., Kenyatta Avenue):</label>
+                        <input type="text" id="reqLocation" required placeholder="Kenyatta Avenue" class="w-full bg-slate-900 border border-slate-700 rounded px-3 py-2 text-sm text-white focus:outline-none focus:border-emerald-500">
+                    </div>
+                    <div>
+                        <label class="block text-xs text-slate-400 mb-1">Enter Description of the issue:</label>
+                        <input type="text" id="reqDesc" required placeholder="Broken streetlight pole near junction" class="w-full bg-slate-900 border border-slate-700 rounded px-3 py-2 text-sm text-white focus:outline-none focus:border-emerald-500">
+                    </div>
+                    <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-semibold py-2 rounded text-sm transition">
+                        Execute saveRequest(newReq)
+                    </button>
+                </form>
+            </div>
+
+            <!-- Option 3: Update Request Status (Admin Action) -->
+            <div class="bg-slate-800 border border-slate-700 rounded-xl p-5">
+                <h2 class="text-sm font-bold text-amber-400 font-mono mb-3">3. Update Request Status (Admin Action)</h2>
+                <form id="updateForm" class="space-y-3">
+                    <div>
+                        <label class="block text-xs text-slate-400 mb-1">Enter Request ID to update (e.g., 101):</label>
+                        <input type="number" id="updateId" required placeholder="101" class="w-full bg-slate-900 border border-slate-700 rounded px-3 py-2 text-sm text-white focus:outline-none focus:border-amber-500">
+                    </div>
+                    <div>
+                        <label class="block text-xs text-slate-400 mb-1">Select new status (1. In Progress / 2. Resolved):</label>
+                        <select id="updateStatus" class="w-full bg-slate-900 border border-slate-700 rounded px-3 py-2 text-sm text-white focus:outline-none focus:border-amber-500">
+                            <option value="In Progress">1. In Progress</option>
+                            <option value="Resolved">2. Resolved</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="w-full bg-amber-600 hover:bg-amber-500 text-white font-semibold py-2 rounded text-sm transition">
+                        Execute updateRequestStatus()
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Right Column: Option 2 (Admin View), requests.txt & Console Output -->
+        <div class="lg:col-span-7 space-y-6">
+            <!-- Option 2: Admin View Table -->
+            <div class="bg-slate-800 border border-slate-700 rounded-xl p-5">
+                <div class="flex justify-between items-center mb-3">
+                    <h2 class="text-sm font-bold text-emerald-400 font-mono">2. View All Requests (Admin View)</h2>
+                    <span class="text-xs font-mono text-slate-400">Storage: requests.txt</span>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse text-sm">
+                        <thead>
+                            <tr class="border-b border-slate-700 text-xs text-slate-400 uppercase">
+                                <th class="py-2 px-2">ID</th>
+                                <th class="py-2 px-2">Category</th>
+                                <th class="py-2 px-2">Location</th>
+                                <th class="py-2 px-2">Description</th>
+                                <th class="py-2 px-2">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableBody" class="divide-y divide-slate-700/60"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Raw requests.txt File Content (Pipe-delimited) -->
+            <div class="bg-slate-950 border border-slate-800 rounded-xl p-4 font-mono text-xs">
+                <div class="flex justify-between items-center text-slate-400 pb-2 mb-2 border-b border-slate-800">
+                    <span>📄 requests.txt (Pipe-Delimited File Stream)</span>
+                    <button onclick="resetDefaultData()" class="text-xs text-slate-500 hover:text-slate-300">Reset Sample Data</button>
+                </div>
+                <pre id="rawFileOutput" class="text-emerald-300 overflow-x-auto whitespace-pre-wrap leading-relaxed"></pre>
+            </div>
+
+            <!-- C++ Console Terminal Output -->
+            <div class="bg-black border border-slate-800 rounded-xl p-4 font-mono text-xs">
+                <div class="text-slate-500 pb-2 mb-2 border-b border-slate-900">💻 C++ Standard Output Stream (cout)</div>
+                <pre id="consoleOutput" class="text-slate-200 overflow-x-auto whitespace-pre-wrap max-h-48 overflow-y-auto"></pre>
+            </div>
+        </div>
+    </main>
+
+    <!-- C++ Source Code View Tab -->
+    <section id="viewCpp" class="max-w-6xl mx-auto px-6 py-8 hidden">
+        <div class="bg-slate-950 border border-slate-800 rounded-xl p-6">
+            <h2 class="text-sm font-bold text-emerald-400 font-mono mb-4">main.cpp - Complete C++ Implementation</h2>
+            <pre class="text-xs font-mono text-slate-200 overflow-x-auto leading-relaxed"><code>#include &lt;iostream&gt;
+#include &lt;fstream&gt;
+#include &lt;string&gt;
+#include &lt;vector&gt;
+
+using namespace std;
+
+// 1. The Blueprint for a Public Service Request
+struct ServiceRequest {
+    int id;
+    string category;     // e.g., "Streetlight", "Water"
+    string location;     // e.g., "Kenyatta Avenue"
+    string description;  // Details of the issue
+    string status;       // "Pending", "In Progress", "Resolved"
+};
+
+// 2. Save a new request to a text file
+void saveRequest(const ServiceRequest&amp; req) {
+    ofstream outFile("requests.txt", ios::app);
+    if (!outFile) {
+        cout &lt;&lt; "Error opening file for writing!\n";
+        return;
+    }
+
+    outFile &lt;&lt; req.id &lt;&lt; "|" 
+            &lt;&lt; req.category &lt;&lt; "|" 
+            &lt;&lt; req.location &lt;&lt; "|" 
+            &lt;&lt; req.description &lt;&lt; "|" 
+            &lt;&lt; req.status &lt;&lt; "\n";
+            
+    outFile.close();
+    cout &lt;&lt; "Success: Request #" &lt;&lt; req.id &lt;&lt; " saved to file!\n";
+}
+
+// 3. Read and display all requests from the file
+void viewAllRequests() {
+    ifstream inFile("requests.txt");
+    if (!inFile) {
+        cout &lt;&lt; "No requests found yet.\n";
+        return;
+    }
+
+    string line;
+    cout &lt;&lt; "\n--- ALL PUBLIC SERVICE REQUESTS ---\n";
+    while (getline(inFile, line)) {
+        cout &lt;&lt; line &lt;&lt; "\n";
+    }
+    cout &lt;&lt; "-----------------------------------\n";
+    inFile.close();
+}
+
+// 4. Update Request Status by ID
+void updateRequestStatus(int targetId, string newStatus) {
+    ifstream inFile("requests.txt");
+    if (!inFile) {
+        cout &lt;&lt; "No requests found!\n";
+        return;
+    }
+
+    vector&lt;ServiceRequest&gt; requests;
+    string line;
+    bool found = false;
+
+    while (getline(inFile, line)) {
+        size_t pos1 = line.find('|');
+        size_t pos2 = line.find('|', pos1 + 1);
+        size_t pos3 = line.find('|', pos2 + 1);
+        size_t pos4 = line.find('|', pos3 + 1);
+
+        if (pos1 != string::npos &amp;&amp; pos4 != string::npos) {
+            ServiceRequest item;
+            item.id = stoi(line.substr(0, pos1));
+            item.category = line.substr(pos1 + 1, pos2 - pos1 - 1);
+            item.location = line.substr(pos2 + 1, pos3 - pos2 - 1);
+            item.description = line.substr(pos3 + 1, pos4 - pos3 - 1);
+            item.status = line.substr(pos4 + 1);
+
+            if (item.id == targetId) {
+                item.status = newStatus;
+                found = true;
+            }
+            requests.push_back(item);
+        }
+    }
+    inFile.close();
+
+    if (!found) {
+        cout &lt;&lt; "Request ID #" &lt;&lt; targetId &lt;&lt; " not found!\n";
+        return;
+    }
+
+    ofstream outFile("requests.txt");
+    for (const auto&amp; item : requests) {
+        outFile &lt;&lt; item.id &lt;&lt; "|" 
+                &lt;&lt; item.category &lt;&lt; "|" 
+                &lt;&lt; item.location &lt;&lt; "|" 
+                &lt;&lt; item.description &lt;&lt; "|" 
+                &lt;&lt; item.status &lt;&lt; "\n";
+    }
+    outFile.close();
+    cout &lt;&lt; "Success: Request #" &lt;&lt; targetId &lt;&lt; " status updated to " &lt;&lt; newStatus &lt;&lt; "!\n";
+}</code></pre>
+        </div>
+    </section>
+
+    <script>
+        const sampleRequests = [
+            { id: 101, category: "Water", location: "Murang'a Town CBD", description: "Main water pipe burst near market entrance", status: "In Progress" },
+            { id: 102, category: "Streetlight", location: "Kenyatta Avenue", description: "Three solar streetlights out of service", status: "Pending" },
+            { id: 103, category: "Garbage", location: "Mukuyu Market", description: "Scheduled waste collection truck requested", status: "Resolved" }
+        ];
+
+        let requests = JSON.parse(localStorage.getItem('cpp_psb_requests')) || sampleRequests;
+
+        function logConsole(msg) {
+            const out = document.getElementById('consoleOutput');
+            out.textContent += msg + "\n";
+            out.scrollTop = out.scrollHeight;
+        }
+
+        function renderAll() {
+            const tbody = document.getElementById('tableBody');
+            const rawOut = document.getElementById('rawFileOutput');
+            tbody.innerHTML = '';
+            let rawText = '';
+
+            requests.forEach(r => {
+                rawText += `${r.id}|${r.category}|${r.location}|${r.description}|${r.status}\n`;
+                const badge = r.status === 'Resolved' 
+                    ? 'bg-emerald-900/60 text-emerald-300 border-emerald-700' 
+                    : (r.status === 'In Progress' ? 'bg-amber-900/60 text-amber-300 border-amber-700' : 'bg-slate-700 text-slate-300 border-slate-600');
+
+                tbody.innerHTML += `
+                    <tr>
+                        <td class="py-2.5 px-2 font-mono font-bold text-emerald-400">#${r.id}</td>
+                        <td class="py-2.5 px-2 font-medium">${r.category}</td>
+                        <td class="py-2.5 px-2 text-slate-300">${r.location}</td>
+                        <td class="py-2.5 px-2 text-slate-400">${r.description}</td>
+                        <td class="py-2.5 px-2"><span class="text-xs px-2 py-0.5 rounded border ${badge}">${r.status}</span></td>
+                    </tr>
+                `;
+            });
+
+            rawOut.textContent = rawText || "(requests.txt is empty)";
+            localStorage.setItem('cpp_psb_requests', JSON.stringify(requests));
+        }
+
+        document.getElementById('submitForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const newReq = {
+                id: parseInt(document.getElementById('reqId').value, 10),
+                category: document.getElementById('reqCategory').value.trim(),
+                location: document.getElementById('reqLocation').value.trim(),
+                description: document.getElementById('reqDesc').value.trim(),
+                status: "Pending"
+            };
+            requests.push(newReq);
+            renderAll();
+            logConsole(`> Choice 1: Submit a New Request\nSuccess: Request #${newReq.id} saved to file!`);
+            this.reset();
+        });
+
+        document.getElementById('updateForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const targetId = parseInt(document.getElementById('updateId').value, 10);
+            const newStatus = document.getElementById('updateStatus').value;
+            let found = false;
+
+            requests = requests.map(item => {
+                if (item.id === targetId) {
+                    item.status = newStatus;
+                    found = true;
+                }
+                return item;
+            });
+
+            if (!found) {
+                logConsole(`> Choice 3: Update Request Status\nRequest ID #${targetId} not found!`);
+            } else {
+                renderAll();
+                logConsole(`> Choice 3: Update Request Status\nSuccess: Request #${targetId} status updated to ${newStatus}!`);
+            }
+            this.reset();
+        });
+
+        function resetDefaultData() {
+            requests = [...sampleRequests];
+            renderAll();
+            logConsole(`> System reset to default requests.txt records.`);
+        }
+
+        function switchTab(tab) {
+            const isApp = tab === 'app';
+            document.getElementById('viewApp').classList.toggle('hidden', !isApp);
+            document.getElementById('viewCpp').classList.toggle('hidden', isApp);
+            document.getElementById('tabApp').className = isApp 
+                ? 'px-4 py-2 rounded-lg text-xs font-bold bg-emerald-600 text-white' 
+                : 'px-4 py-2 rounded-lg text-xs font-bold bg-slate-700 text-slate-300 hover:bg-slate-600';
+            document.getElementById('tabCpp').className = !isApp 
+                ? 'px-4 py-2 rounded-lg text-xs font-bold bg-emerald-600 text-white' 
+                : 'px-4 py-2 rounded-lg text-xs font-bold bg-slate-700 text-slate-300 hover:bg-slate-600';
+        }
+
+        logConsole("=== PUBLIC SERVICE REQUEST SYSTEM ===\nLoaded requests.txt successfully.");
+        renderAll();
+    </script>
+</body>
+</html>
